@@ -9,8 +9,9 @@ from thumbor.filters import BaseFilter, filter_method
 class Filter(BaseFilter):
     @filter_method(
         BaseFilter.String,#word
+        BaseFilter.PositiveNumber,#alpha
     )
-    def text_strips(self, word):
+    def text_strips(self, word, alpha = 90):
         backgroundImage = self.engine.image
         fontSize = 30
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fontSize)
@@ -33,7 +34,7 @@ class Filter(BaseFilter):
         finalWords = '\n'.join(finalWords)
 
         draw = ImageDraw.Draw(txtImage)
-        draw.multiline_text((0,0), finalWords, fill=(0, 0, 0, 90), font=font, spacing=80)
+        draw.multiline_text((0,0), finalWords, fill=(0, 0, 0, alpha), font=font, spacing=80)
         topBottomRotate = txtImage.rotate(angle=45, expand=1, center=(0,0))
         backgroundImage.paste(im=topBottomRotate, box=(-(txtImageY/2 + 80), 0), mask=topBottomRotate)
         self.engine.image = backgroundImage
