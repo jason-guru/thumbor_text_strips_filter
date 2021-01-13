@@ -17,24 +17,20 @@ class Filter(BaseFilter):
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fontSize)
         wordWidth, wordHeight = font.getsize(word)
         bgWidth, bgHeight = backgroundImage.size
-        bgDiagonal = 2*(bgWidth + bgHeight)
 
-        txtImage = Image.new('RGBA', (bgDiagonal, bgHeight), (0, 0, 0, 0))
-        txtImageX, txtImageY = txtImage.size
-        words = []
-        rowCount = int(round(bgDiagonal/wordWidth)) + 2
-        for w in range(rowCount):
-            words.append(word)
-        words = '     '.join(words)
-
-        finalWords = []
-        columnCounts = int(round(bgHeight/wordHeight))
-        for w in range(columnCounts):
-            finalWords.append(words)
-        finalWords = '\n'.join(finalWords)
-
+        txtImage = Image.new('RGBA', (wordWidth, wordHeight), (0,0,0,0))
+        
         draw = ImageDraw.Draw(txtImage)
-        draw.multiline_text((0,0), finalWords, fill=(0, 0, 0, alpha), font=font, spacing=80)
-        topBottomRotate = txtImage.rotate(angle=45, expand=1, center=(0,0))
-        backgroundImage.paste(im=topBottomRotate, box=(-(txtImageY/2 + 80), 0), mask=topBottomRotate)
+        draw.text((0, 0), word, fill=(0, 0, 0, alpha), font=font)
+        rotatedText = txtImage.rotate(angle=45, expand = 1)
+        x_repeat = bgWidth / wordWidth + 1
+        y_repeat = bgHeight / (wordHeight)
+        x_spacing = 10
+        y_spacing = 20
+        for x_count in range(0, x_repeat):
+            x = int(x_count*(rotatedText.size[0] + x_spacing))
+            for y_count in range(0, y_repeat):
+                y = int(y_count*(rotatedText.size[1] + y_spacing))
+                backgroundImage.paste(im=rotatedText, box=(x, y), mask=rotatedText)
+
         self.engine.image = backgroundImage
