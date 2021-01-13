@@ -17,14 +17,12 @@ class Filter(BaseFilter):
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fontSize)
         wordWidth, wordHeight = font.getsize(word)
         bgWidth, bgHeight = backgroundImage.size
-
         txtImage = Image.new('RGBA', (wordWidth, wordHeight), (0,0,0,0))
-        
         draw = ImageDraw.Draw(txtImage)
         draw.text((0, 0), word, fill=(0, 0, 0, alpha), font=font)
         rotatedText = txtImage.rotate(angle=45, expand = 1)
         x_repeat = bgWidth / wordWidth + 1
-        y_repeat = bgHeight / (wordHeight)
+        y_repeat = bgHeight / wordHeight
         x_spacing = 10
         y_spacing = 20
         for x_count in range(0, x_repeat):
